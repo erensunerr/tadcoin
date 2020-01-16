@@ -2,14 +2,13 @@ from crypto import hash
 
 class Block:
     def __init__(self):
-        self.data = ""
+        self.data = []
         self.hash = ""
         self.nonce = 0
-        self.data = ""
         self.prevHash = ""
 
-    def add_data(self, data):
-        self.data += data
+    def add_transaction(self, transaction):
+        self.data += [transaction.__repr__()]
 
     def import_block(self, data_string):
         x = data_string.split("|\n")

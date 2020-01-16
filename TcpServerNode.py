@@ -87,7 +87,7 @@ class Node(threading.Thread):
             data["__port"]      = self.port;
             data["__node"]      = type
             data["__timestamp"] = time.time()
-            
+
             message = json.dumps(data, separators=(',', ':'));
             self.dprint("Visuals sending: " + message)
             #self.udp_server.sendto(message, ('92.222.168.248', 15000))
@@ -193,7 +193,7 @@ class Node(threading.Thread):
         if n in self.nodesIn or n in self.nodesOut:
             try:
                 n.send(self.create_message( data ))
-                
+
             except Exception as e:
                 self.dprint("TcpServer.send2node: Error while sending data to the node (" + str(e) + ")");
         else:
@@ -205,14 +205,14 @@ class Node(threading.Thread):
         print("connect_with_node(" + host + ", " + str(port) + ")")
         if ( host == self.host and port == self.port ):
             print("connect_with_node: Cannot connect with yourself!!")
-            return;
+            return
 
         # Check if node is already connected with this node!
         for node in self.nodesOut:
             if ( node.get_host() == host and node.get_port() == port ):
                 print("connect_with_node: Already connected with this node.")
                 return True
-        
+
         try:
             sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self.dprint("connecting to %s port %s" % (host, port))
@@ -257,8 +257,8 @@ class Node(threading.Thread):
                 connection, client_address = self.sock.accept()
 
                 # TODO: Startup first communication in which the details of the node is communicated
-                # TODO: 
-                
+                # TODO:
+
                 thread_client = self.create_new_connection(connection, client_address, self.callback)
                 thread_client.start()
                 self.nodesIn.append(thread_client)
@@ -296,7 +296,7 @@ class Node(threading.Thread):
         print("TcpServer stopped")
 
         # For visuals!
-        self.send_visuals("node-closed", { "host": self.host, "port": self.port}) 
+        self.send_visuals("node-closed", { "host": self.host, "port": self.port})
 
     # Started to implement the events, so this class can be extended with a better class
     # In the event a callback can be called!
@@ -307,7 +307,7 @@ class Node(threading.Thread):
 
         # For visuals!
         self.send_visuals("node-connection-from", { "host": node.host, "port": node.port })
-        
+
     def event_connected_with_node(self, node):
         self.dprint("event_node_connected: " + node.getName())
 
@@ -360,7 +360,7 @@ class NodeConnection(threading.Thread):
         id.update(t.encode('ascii'))
         self.id = id.hexdigest()
 
-        self.nodeServer.dprint("NodeConnection.send: Started with client (" + self.id + ") '" + self.host + ":" + str(self.port) + "'")        
+        self.nodeServer.dprint("NodeConnection.send: Started with client (" + self.id + ") '" + self.host + ":" + str(self.port) + "'")
 
     def get_host(self):
         return self.host
@@ -405,7 +405,7 @@ class NodeConnection(threading.Thread):
             try:
                 line = self.sock.recv(4096) # the line ends with -TSN\n
                 line = line.encode('utf-8');
-                
+
             except socket.timeout:
                 pass
 
@@ -427,14 +427,14 @@ class NodeConnection(threading.Thread):
 
                     try:
                         data = json.loads(message)
-                        
+
                     except Exception as e:
                         print("NodeConnection: Data could not be parsed (%s) (%s)" % (line, str(e)) )
 
                     if ( self.check_message(data) ):
                         self.nodeServer.message_count_recv = self.nodeServer.message_count_recv + 1
                         self.nodeServer.event_node_message(self, data)
-                        
+
                         if (self.callback != None):
                             self.callback("NODEMESSAGE", self.nodeServer, self, data)
 

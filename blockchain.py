@@ -1,7 +1,6 @@
 class Blockchain:
     def __init__(self):
         self.chain = []
-        #TODO: sync chain with others on the network
 
     def add_block(self, block):
         try:
@@ -17,3 +16,7 @@ class Blockchain:
             self.chain += block
 
         return True
+
+    def search_address(self, address):
+        for block in self.chain:
+            

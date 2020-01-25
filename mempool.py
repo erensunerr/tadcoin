@@ -13,3 +13,5 @@ class Mempool:
 
     def flush(self):
         self.transactions = []
+
+mempool = Mempool()

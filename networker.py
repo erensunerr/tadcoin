@@ -19,8 +19,9 @@ class NetworkR(Node):
         super().__init__(host, port, None)
 
     def discover_peers(self):
-        if not len(self.peers) > CONNECTION_LIMIT:
-            for node in self.peers:
+        q = self.peers
+        if len(q) < CONNECTION_LIMIT:
+            for node in q:
                 if node not in self.nodesIn or node not in self.nodesOut:
                     self.connect_with_node(node, self.port)
                 self.send_to_node(node, 'gimme_more_nodes<>')
@@ -56,7 +57,7 @@ class NetworkR(Node):
         self.peers.add(node.get_host())
 
     def event_connected_with_node(self, node):
-        self.peers.discard(node.get_host())
+        self.peers.add(node.get_host())
 
     def event_node_inbound_closed(self, node):
         self.peers.discard(node.get_host())
@@ -76,3 +77,16 @@ class NetworkR(Node):
             'your_nodes': self.received_nodes
         }
         self.send_to_node(node, action_list[function](inp))
+
+
+
+
+##################
+N = None
+def test(x):
+    global N
+    N = NetworkR()
+    print(N.host)
+    N.add_peer(x)
+    N.discover_peers()
+    N.broadcast_transaction("HEYY")

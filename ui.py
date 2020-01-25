@@ -1,6 +1,8 @@
 #TODO: make it more beautiful https://codeburst.io/building-beautiful-command-line-interfaces-with-python-26c7e1bb54df
 class UserInterface:
-    def ask():
+    def __init__(self):
+        print(f"Welcome to tadcoin!")
+    def ask(self):
         print(f"""
         1) Send money to pubkey
         2) View Balance
@@ -10,3 +12,5 @@ class UserInterface:
         """)
         x = int(input())
         return x
+
+    def keypair_operations(self):

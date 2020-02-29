@@ -14,9 +14,7 @@ class Blockchain:
         print(block, block.verify())
         if block.verify():
             self.chain += block
-
         return True
 
     def search_address(self, address):
         for block in self.chain:
-            

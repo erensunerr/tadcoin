@@ -1,27 +1,27 @@
-from crypto import verify_pub_key,
+from crypto import verify_pub_key, kp, dp, hash
+#kp sender, dp recv
 class transaction:
-    def from_data(self, recipient, sender, amount, pubkey, signature):
-        self.sender = sender
-        self.recipient = recipient
+    def __init__(self, amount, pubkey_recv, pubkey_sender, signature=None):
         self.amount = amount
-        self.pubkey = pubkey
+        self.pubkey_receiver = pubkey_recv
         self.signature = signature
+        self.pubkey_sender = pubkey_sender
 
-    def verify():
-        verify_pub_key(self.pubkey, self.__repr__(), self.signature)
-
-    def __repr__(self):
+    def verify(self, signature=None):
         if not self.signature:
-            raise Exception("Sign the transaction.")
-        return f"{self.sender}-{self.amount}-{self.recipient}-{self.signature}-{self.pubkey}"
+            self.signature = signature
+        return verify_pub_key(self.pubkey_sender, self, self.signature)
 
-    def from_repr(self, repr):
-        x = repr.split('-')
-        self.sender = x[0]
-        self.amount = x[1]
-        self.recipient = x[2]
-        self.signature = x[3]
-        self.pubkey = x[4]
+    def sign(self, kp):
+        x = self
+        self.signature = kp.sign(x)
+        return self.signature
 
-    def sign(self, privateKey):
-        
+    def __str__(self):
+        return str(self.amount) + str(self.pubkey_receiver) + str(self.signature)
+
+def test():
+    t = transaction(15, dp.pubkey(), kp.pubkey())
+    x = t.sign(kp)
+    p = transaction(15, dp.pubkey(), kp.pubkey(), signature=x)
+test()

@@ -1,4 +1,4 @@
-from crypto import hash
+from crypto import hash, kp
 import datetime, math, queue
 class Block:
     # Includes: index, timestamp in unix time, transactions, nonce and previous_hash
@@ -21,6 +21,7 @@ class Block:
 
     def mine(self):
         self.root = self.compute_merkle_root()
+        self.add_transaction(kp.pubkey())
         def isGood(self):
             return hash(str(self))[0:4] == "0000"
         self.nonce = 0

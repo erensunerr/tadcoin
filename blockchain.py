@@ -16,5 +16,13 @@ class Blockchain:
             self.chain += block
         return True
 
-    def search_address(self, address):
+    def search_pubkey(self, pubkey):
+        x = 0
         for block in self.chain:
+            for transaction in block.transactions:
+                transaction.verify()
+                if transaction.pubkey_receiver == pubkey:
+                    x += transaction.value
+                if transaction.pubkey_sender == pubkey:
+                    x -= transaction.value
+        return x

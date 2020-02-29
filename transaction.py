@@ -20,6 +20,14 @@ class transaction:
     def __str__(self):
         return str(self.amount) + str(self.pubkey_receiver) + str(self.signature)
 
+class money_created:
+    def __init__(self, pubkey_recv, amount):
+        self.pubkey_receiver = pubkey_recv
+        self.amount = amount
+
+    def verify(self):
+        return True
+
 def test():
     t = transaction(15, dp.pubkey(), kp.pubkey())
     x = t.sign(kp)
